@@ -1,20 +1,9 @@
 //Module for font rendering
 extern crate freetype as ft;
-use gl::types::*;
 
 use freetype::Library;
-
-use std::fs;
-use std::ffi::CString;
-use std::ptr;
-use std::char;
-use std::ffi::CStr;
-use std::os::raw::c_char;
 use std::collections::HashMap;
 
-use crate::glsupp::*;
-
-extern crate nalgebra_glm as glm;
 
 struct Glyph {
     texture: u32, //ID of the glyph texture
@@ -25,10 +14,9 @@ struct Glyph {
 
 pub struct FontRenderer {
     fontname: String,
-    map: HashMap<c_char, Glyph>, //the font map
-    program: GLuint,
+    map: HashMap<u32, Glyph>, //the font map
 }
-
+/*
 impl FontRenderer {
     pub fn new(fontname: String) -> FontRenderer {
         //start loading shaders
@@ -145,3 +133,4 @@ impl FontRenderer {
 
     }
 }
+*/
