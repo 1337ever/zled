@@ -20,6 +20,8 @@ use glutin::dpi::PhysicalSize;
 
 use crate::font::FontRenderer;
 
+extern crate nalgebra_glm as glm;
+
 
 pub struct DisplayLoop {}
 

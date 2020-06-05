@@ -2,6 +2,7 @@ extern crate gl;
 
 use gl::types::*;
 use std::ffi::CString;
+use std::ffi::c_void;
 use std::mem;
 use std::ptr;
 use std::str;
@@ -77,3 +78,12 @@ pub fn link_program(vs: GLuint, fs: GLuint) -> GLuint {
     program
     }
 }
+
+pub fn to_glchar(instr: &str) -> *const GLchar {
+    instr.as_ptr() as *const GLchar
+}
+/*
+pub fn to_voidptr<T>(invec: Vec<T>) -> c_void {
+   
+}
+*/

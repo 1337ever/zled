@@ -12,7 +12,9 @@ use std::ffi::CStr;
 use std::os::raw::c_char;
 use std::collections::HashMap;
 
-use crate::glsupp;
+use crate::glsupp::*;
+
+extern crate nalgebra_glm as glm;
 
 struct Glyph {
     texture: u32, //ID of the glyph texture
@@ -32,10 +34,10 @@ impl FontRenderer {
         //start loading shaders
         let vert = fs::read_to_string("data/font.vsh")
             .expect("failed to load vertex shader!");
-        let vs = glsupp::compile_shader(&vert, gl::VERTEX_SHADER);
+        let vs = compile_shader(&vert, gl::VERTEX_SHADER);
         let frag = fs::read_to_string("data/font.fsh")
             .expect("failed to load fragment shader!");
-        let fs = glsupp::compile_shader(&frag, gl::FRAGMENT_SHADER);
+        let fs = compile_shader(&frag, gl::FRAGMENT_SHADER);
         println!("shaders compiled");
 
         //load fonts and all related stuff
@@ -89,15 +91,18 @@ impl FontRenderer {
         FontRenderer {
             fontname: fontname,
             map: map,
-            program: glsupp::link_program(vs, fs),
+            program: link_program(vs, fs),
         }
     }
     pub fn render_glyph(&mut self, vao: GLuint, vbo: GLuint, id: c_char, x: i32, y: i32, scale: f32, color: [f32; 3]) {
         unsafe {
+            let projection: glm::Mat4 = glm::ortho(0.0f32, 800.0, 600.0, 0.0f32, 0.0f32, 1.0f32);
             //activate render state
             gl::UseProgram(self.program);
-            let loc: *const GLchar = "textColor".as_ptr() as *const i8;
-            gl::Uniform3f(gl::GetUniformLocation(self.program, loc), color[0], color[1], color[2]);
+            gl::UniformMatrix4fv(gl::GetUniformLocation(self.program, to_glchar("projection")), 1, gl::FALSE, glm::value_ptr(&projection).as_ptr());
+            gl::UseProgram(self.program);
+            gl::Uniform3f(gl::GetUniformLocation(self.program, to_glchar("textColor")), color[0], color[1], color[2]);
+            //panic!("{:?}", gl::GetUniformLocation(self.program, loc));
             gl::ActiveTexture(gl::TEXTURE0);
             gl::BindVertexArray(vao);
 
@@ -120,7 +125,7 @@ impl FontRenderer {
             gl::BindTexture(gl::TEXTURE_2D, tg.texture);
             //update vbo memory
             gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-            gl::BufferSubData(gl::ARRAY_BUFFER, 0, std::mem::size_of_val(&vertices) as isize, vertices.as_ptr() as *mut std::ffi::c_void);
+            gl::BufferSubData(gl::ARRAY_BUFFER, 0, std::mem::size_of_val(&vertices) as isize, glm::value_ptr(vertices));
 
             gl::BindBuffer(gl::ARRAY_BUFFER, 0);
             //render quad
