@@ -1,5 +1,6 @@
-use zled::window;
-//mod font;
+mod glsupp;
+mod font;
+mod window;
 
 fn main() {
     //let mut frender = font::FontRenderer::new("inputmono.ttf".to_string(), 600, 600);

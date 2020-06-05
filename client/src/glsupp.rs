@@ -1,4 +1,3 @@
-pub mod glsupp;
 extern crate gl;
 
 use gl::types::*;
