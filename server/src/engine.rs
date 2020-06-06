@@ -41,4 +41,7 @@ impl ScriptEngine<'_> {
             scope: scope,
         }
     }
+    pub fn eval(&mut self, code: &str) -> Dynamic {
+        self.engine.eval_with_scope::<Dynamic>(&mut self.scope, code).unwrap()
+    }
 }

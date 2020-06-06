@@ -22,7 +22,7 @@ use winit::{
 
 use crate::font::*;
 
-pub fn run() {
+pub fn run(winsize: [u32; 2]) {
     //initialize vulkan things and gather information
     let instance = Instance::new(None, &InstanceExtensions::none(), None)
         .expect("failed to create instance!");
